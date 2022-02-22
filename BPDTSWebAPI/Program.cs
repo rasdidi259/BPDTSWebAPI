@@ -1,3 +1,4 @@
+using BPDTSWebAPI.Utils;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -13,6 +14,10 @@ namespace BPDTSWebAPI
     {
         public static void Main(string[] args)
         {
+            // Initialize Client
+            RestApiService.InitializeClient();
+
+
             CreateHostBuilder(args).Build().Run();
         }
 

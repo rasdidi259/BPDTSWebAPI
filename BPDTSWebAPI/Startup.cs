@@ -1,3 +1,4 @@
+using BPDTSWebAPI.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,7 +29,11 @@ namespace BPDTSWebAPI
         {
 
             services.AddControllers();
-            services.AddSwaggerGen(c =>
+
+            // Register IUnitOfWork / UnitOfWork
+            services.AddTransient<IUsersRepository, UsersRepository>();
+
+            services.AddSwaggerGen(c => 
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BPDTSWebAPI", Version = "v1" });
             });

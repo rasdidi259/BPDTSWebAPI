@@ -1,30 +1,29 @@
 ﻿using BPDTSWebAPI.Entities;
 using BPDTSWebAPI.Repository;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BPDTSWebAPI.Controllers
 {
+    [Route("api/controller")]
+    [ApiController]
 
-    public class UserController :ControllerBase
+    public class UserController : ControllerBase
     {
-        private IUsersRepository _usersRepository;
+        private readonly IUsersRepository _usersRepository;
 
         public UserController(IUsersRepository usersRepository)
         {
             _usersRepository = usersRepository;
         }
 
+        [HttpGet(Name = "GetAllUsers")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<User>> GetAllUsers()
         {
-            var newUser = new User()
-            {
-                Id = 1,
-                FirstName = "Jon",
-                LastName = "Doe"
-            };
-            var listOfUsers = new List<User>() { newUser };
+            var listOfUsers = await _usersRepository.GetAllUsersAsync();
             return Ok(listOfUsers);
         }
     }

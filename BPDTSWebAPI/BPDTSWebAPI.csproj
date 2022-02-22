@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BPDTSWebAPI.Repository\BPDTSWebAPI.Repository.csproj" />
-    <ProjectReference Include="..\BPDTSWebAPI.Utils\BPDTSWebAPI.Utils.csproj" />
   </ItemGroup>
 
 </Project>
