@@ -29,5 +29,24 @@ namespace BPDTSWebAPI.Repository
                 }
             }
         }
+
+
+
+
+        public async Task<User> GetUserByIdAsync(int userId)
+        {
+            using (HttpResponseMessage response = await RestApiService.RestApiClient.GetAsync($"{baseUrl}user/{userId}"))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    User user = await response.Content.ReadAsAsync<User>();
+                    return user;
+                }
+                else
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+            }
+        }
     }
 }

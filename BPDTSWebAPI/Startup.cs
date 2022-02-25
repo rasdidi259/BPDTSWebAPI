@@ -1,3 +1,4 @@
+using BPDTSWebAPI.Configurations;
 using BPDTSWebAPI.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +31,9 @@ namespace BPDTSWebAPI
 
             services.AddControllers();
 
+            // Added AutoMapper(MapperInitializer)
+            services.AddAutoMapper(typeof(MapperInitializer));
+
             // Register IUnitOfWork / UnitOfWork
             services.AddTransient<IUsersRepository, UsersRepository>();
 
@@ -38,7 +42,7 @@ namespace BPDTSWebAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BPDTSWebAPI", Version = "v1" });
             });
 
-
+            services.AddControllers().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             
         }
 

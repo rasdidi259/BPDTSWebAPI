@@ -8,5 +8,7 @@ namespace BPDTSWebAPI.Repository
     public interface IUsersRepository
     {
         Task<IList<User>> GetAllUsersAsync();
+
+        Task<User> GetUserByIdAsync(int userId);
     }
 }
