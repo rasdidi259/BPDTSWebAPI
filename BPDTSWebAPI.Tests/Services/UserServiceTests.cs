@@ -1,5 +1,7 @@
-﻿using BPDTSWebAPI.Repository;
+﻿using BPDTSWebAPI.Entities;
+using BPDTSWebAPI.Repository;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -39,6 +41,27 @@ namespace BPDTSWebAPI.Tests.Services
             //var listOfUsers = userRepoMock.GetAllUsersAsync();
 
             //Assert.Equal();
+        }
+
+
+        public async Task GetUserByCityAsync_MethodIsCalled_ReturnsRightUser()
+        {
+            // Arrange
+            var user = new User()
+            {
+                Id = 1,
+                FirstName = "Maurise",
+                LastName = "Shieldon",
+                Email = "mshieldon0@squidoo.com",
+                IPAddress = "192.57.232.111",
+                Latitude = 34.003135,
+                Longitude = -117.7228641
+            };
+
+
+            // Act
+
+            // Assert
         }
     }
 }

@@ -10,13 +10,13 @@ namespace BPDTSWebAPI.Configurations
 {
     public class MapperInitializer:Profile
     {
-
         /// <summary>
         /// Configures the DTOs to Data Models
         /// </summary>
         public MapperInitializer()
         {
             CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<UserByCity, UserByCityDTO>().ReverseMap();
         }
     }
 }

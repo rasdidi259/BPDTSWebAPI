@@ -29,32 +29,53 @@ namespace BPDTSWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<UserDTO>>> GetAllUsers()
         {
-            var listOfUsers = await _usersRepository.GetAllUsersAsync();
-            var results = _mapper.Map<List<UserDTO>>(listOfUsers);
-            return Ok(results);
+            var users = await _usersRepository.GetAllUsersAsync();
+            var userDTOs = _mapper.Map<List<UserDTO>>(users);
+            return Ok(userDTOs);
         }
 
-
-
+    
         [HttpGet("{userId:int}", Name = "GetUserById")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<User>> GetUserById(int userId)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<UserDTO>> GetUserById(int userId)
         {
-            //var user = new User()
-            //{
-            //    Id = userId,
-            //    FirstName = "Tim",
-            //    LastName = "Crow"
-            //};
             var user = await _usersRepository.GetUserByIdAsync(userId);
+            
             if (user == null)
             {
                 return NotFound();
             }
+            var userDTO = _mapper.Map<UserDTO>(user);
+            return Ok(userDTO);
+        }
 
-            return Ok(user);
+        //[HttpGet("GetUserByCity/{city:string}")]
+        //[HttpGet("{city:string}", Name = "GetUserByCity")]
+        [HttpGet]
+        [Route("GetUserByCity/{city}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<UserByCityDTO>>> GetUserByCity(string city)
+        {
+            var users = await _usersRepository.GetUserByCityAsync(city);
+            if (users == null)
+            {
+                return NotFound();
+            }
+
+            var userDTOs = _mapper.Map<List<UserByCityDTO>>(users);
+            //var newUser = new User()
+            //{
+            //    Id = 1,
+            //    FirstName = "Tim",
+            //    LastName = "Crow",
+            //    City=city
+            //};
+
+            return Ok(userDTOs);
         }
     }
 }

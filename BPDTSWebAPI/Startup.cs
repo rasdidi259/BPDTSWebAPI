@@ -42,7 +42,7 @@ namespace BPDTSWebAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BPDTSWebAPI", Version = "v1" });
             });
 
-            services.AddControllers().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            //services.AddControllers().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             
         }
 

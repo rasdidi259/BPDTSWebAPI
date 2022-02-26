@@ -83,7 +83,9 @@ namespace BPDTSWebAPI.Tests.Controllers
             };
 
             _userRepoMock.Setup(u => u.GetUserByIdAsync(userId)).Returns(Task.FromResult((User)user));
-            _mapperMock.Setup(y => y.Map<User, UserDTO>(user)).Returns(userDTO);
+
+            _mapperMock.Setup(m => m.Map<UserDTO>(user)).Returns(userDTO);
+
 
             var controller = new UserController(_userRepoMock.Object, _mapperMock.Object);
 
@@ -93,16 +95,16 @@ namespace BPDTSWebAPI.Tests.Controllers
 
             // Assert
             var result = actionResult.Result as OkObjectResult;
-            var actualUserResult = result.Value as User;
+            var actualUserResult = result.Value as UserDTO;
 
-            Assert.Equal(user.LastName, actualUserResult.LastName);
+            Assert.Equal(userDTO.LastName, actualUserResult.LastName);
             Assert.NotNull(actualUserResult);
 
             // Option 1 Assert
-            Assert.Equal(user, actualUserResult);
+            Assert.Equal(userDTO, actualUserResult);
 
             // Option 2 Assert
-            Assert.Equal(user, (actionResult.Result as OkObjectResult)?.Value);
+            Assert.Equal(userDTO, (actionResult.Result as OkObjectResult)?.Value);
         }
 
         [Fact]
@@ -121,7 +123,51 @@ namespace BPDTSWebAPI.Tests.Controllers
             Assert.True(result.Result is NotFoundResult);
         }
 
+        [Fact]
+        public async Task GetUserByCity_GivenCityName_ReturnsUser()
+        {
+            // Arrange 
+            var city = "Kax";
+            var count = 1;
+            var users = new List<UserByCity>()
+            {
+                new UserByCity()
+                {
+                    Id=1,
+                    FirstName = "Tim",
+                    LastName = "Crow"
+                }
+            };
 
+            var userDTOs = new List<UserByCityDTO>()
+            {
+                new UserByCityDTO()
+                {
+                    Id = 1,
+                    FirstName = "Tim",
+                    LastName = "Crow"
+                }
+            };
+
+            _userRepoMock.Setup(u => u.GetUserByCityAsync(city)).Returns(Task.FromResult((List<UserByCity>)users));
+            _mapperMock.Setup(m => m.Map<List<UserByCityDTO>>(users)).Returns(userDTOs);
+
+            var controller = new UserController(_userRepoMock.Object, _mapperMock.Object);
+
+            // Act
+            var actionResult = await controller.GetUserByCity(city);
+
+            // Assert
+            var result = actionResult.Result as OkObjectResult;
+            var actualUserResult = result.Value as List<UserByCityDTO>;
+
+            Assert.NotNull(actualUserResult);
+            Assert.Equal(count, actualUserResult.Count);
+            //Assert.Equal(userDTOs.FirstName, actualUserResult.FirstName);
+            //Assert.Equal(userDTOs.LastName, actualUserResult.LastName);
+            //Assert.Equal(userDTO.City, actualUserResult.City);
+            //Assert.Equal(userDTO.Id, actualUserResult.Id);
+        }
 
 
     }

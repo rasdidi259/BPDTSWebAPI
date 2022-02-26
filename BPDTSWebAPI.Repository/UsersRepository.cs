@@ -30,8 +30,21 @@ namespace BPDTSWebAPI.Repository
             }
         }
 
-
-
+        public async Task<List<UserByCity>> GetUserByCityAsync(string city)
+        {
+            using (HttpResponseMessage response = await RestApiService.RestApiClient.GetAsync($"{baseUrl}city/{city}/users"))
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                   List< UserByCity> users = await response.Content.ReadAsAsync<List<UserByCity>>();
+                    return users;
+                }
+                else
+                {
+                    throw new Exception(response.ReasonPhrase);
+                }
+            }
+        }
 
         public async Task<User> GetUserByIdAsync(int userId)
         {

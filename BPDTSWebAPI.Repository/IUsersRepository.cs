@@ -10,5 +10,6 @@ namespace BPDTSWebAPI.Repository
         Task<IList<User>> GetAllUsersAsync();
 
         Task<User> GetUserByIdAsync(int userId);
+        Task<List<UserByCity>> GetUserByCityAsync(string city);
     }
 }
