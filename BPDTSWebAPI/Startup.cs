@@ -30,9 +30,12 @@ namespace BPDTSWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            services.AddControllers();
-
+            services.AddControllers(
+            config =>
+            {
+                config.CacheProfiles.Add("120SecondsDuration", new CacheProfile { Duration = 120 }); // Cache Duration
+            })
+            .AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore); // Add Newtonsoft Ignore Reference Loop
 
             // Keep track of who requested what and how many times
             services.AddMemoryCache();
@@ -64,7 +67,6 @@ namespace BPDTSWebAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BPDTSWebAPI", Version = "v1" });
             });
 
-            //services.AddControllers().AddNewtonsoftJson(opt => opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             
         }
 
