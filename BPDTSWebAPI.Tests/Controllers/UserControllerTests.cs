@@ -16,7 +16,7 @@ namespace BPDTSWebAPI.Tests.Controllers
     public class UserControllerTests
     {
         /// <summary>
-        /// Private  Member for IUsersRepository
+        /// Private  Member for IUsersRepository and IMapper
         /// </summary>
         private readonly Mock<IUsersRepository> _userRepoMock = new();
         private readonly Mock<IMapper> _mapperMock = new();
@@ -52,7 +52,6 @@ namespace BPDTSWebAPI.Tests.Controllers
         [Fact]
         public async Task GetAllUsers_WithoutCondition_ReturnsAllUsers()
         {
-
             // Arrange 
             var controller = new UserController(_userRepoMock.Object, _mapperMock.Object);
 

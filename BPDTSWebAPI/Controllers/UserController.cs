@@ -46,18 +46,13 @@ namespace BPDTSWebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<UserDTO>> GetUserById(int userId)
         {
-            var user = await _usersRepository.GetUserByIdAsync(userId);
-            
-            if (user == null)
-            {
-                return NotFound();
-            }
+            var user = await _usersRepository.GetUserByIdAsync(userId);            
+            if (user == null) return NotFound();            
             var userDTO = _mapper.Map<UserDTO>(user);
             return Ok(userDTO);
         }
 
-        //[HttpGet("GetUserByCity/{city:string}")]
-        //[HttpGet("{city:string}", Name = "GetUserByCity")]
+
         [HttpGet]
         [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)] 
         [HttpCacheValidation(MustRevalidate = false)] 
@@ -68,20 +63,8 @@ namespace BPDTSWebAPI.Controllers
         public async Task<ActionResult<List<UserByCityDTO>>> GetUserByCity(string city)
         {
             var users = await _usersRepository.GetUserByCityAsync(city);
-            if (users == null)
-            {
-                return NotFound();
-            }
-
+            if (users == null)  return NotFound();            
             var userDTOs = _mapper.Map<List<UserByCityDTO>>(users);
-            //var newUser = new User()
-            //{
-            //    Id = 1,
-            //    FirstName = "Tim",
-            //    LastName = "Crow",
-            //    City=city
-            //};
-
             return Ok(userDTOs);
         }
     }
