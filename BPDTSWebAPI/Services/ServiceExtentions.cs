@@ -48,13 +48,32 @@ namespace BPDTSWebAPI.Services
         /// <param name="services"></param>
         public static void ConfigureRateLimiting(this IServiceCollection services)
         {
+            //var rateLimitRules = new List<RateLimitRule>
+            //{
+            //    new RateLimitRule
+            //    {
+            //        Endpoint="*",
+            //        Limit= 5,
+            //        Period="10m"
+            //    }
+            //};
+
+            //services.Configure<IpRateLimitOptions>(opt =>
+            //{
+            //    opt.GeneralRules = rateLimitRules;
+            //});
+
+            //services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            //services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            //services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
             var rateLimitRules = new List<RateLimitRule>
             {
                 new RateLimitRule
                 {
-                    Endpoint="*",
-                    Limit= 5,
-                    Period="10m"
+                    Endpoint="*",   // every endpoint
+                    Limit=5,        // limited to one call
+                    Period="10m"     // per 10 minute (Use 5s for 5seconds for testing - Error Message ---- API calls quota exceeded! maximum admitted 1 per 5s.)
                 }
             };
 
@@ -66,6 +85,7 @@ namespace BPDTSWebAPI.Services
             services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
             services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+            services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
         }
 
     }
