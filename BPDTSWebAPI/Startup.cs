@@ -41,6 +41,7 @@ namespace BPDTSWebAPI
 
             services.AddHttpContextAccessor();
 
+            services.ConfigureHttpCacheHeaders();
 
             // Added CORS Policy
             services.AddCors(o =>
@@ -83,6 +84,10 @@ namespace BPDTSWebAPI
 
             app.UseCors("CorsPolicyAllowAll"); // Added CORS policy CorsPolicyAllowAll
 
+            // Response Caching Middleware
+            app.UseResponseCaching();
+
+            app.UseHttpCacheHeaders();
 
             app.UseIpRateLimiting();
 

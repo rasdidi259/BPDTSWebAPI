@@ -1,5 +1,6 @@
 ﻿using AspNetCoreRateLimit;
 using BPDTSWebAPI.Models;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -68,5 +69,25 @@ namespace BPDTSWebAPI.Services
             services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
             services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
         }
+
+
+        public static void ConfigureHttpCacheHeaders(this IServiceCollection services)
+        {
+            services.AddResponseCaching();
+            services.AddHttpCacheHeaders(
+                  (expirationOpt) =>
+                  {
+                      expirationOpt.MaxAge = 120;
+                      expirationOpt.CacheLocation = CacheLocation.Private;
+                  },
+                  (validationOpt) =>
+                  {
+                      validationOpt.MustRevalidate = true;
+                  }
+              );
+        }
+
+
+
     }
 }

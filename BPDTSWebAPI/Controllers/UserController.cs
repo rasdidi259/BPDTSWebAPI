@@ -2,6 +2,7 @@
 using BPDTSWebAPI.Entities;
 using BPDTSWebAPI.Models;
 using BPDTSWebAPI.Repository;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -25,6 +26,8 @@ namespace BPDTSWebAPI.Controllers
         }
 
         [HttpGet(Name = "GetAllUsers")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)] // Override Cache and Validating Data for Specific Endpoints
+        [HttpCacheValidation(MustRevalidate = false)] // Override Cache and Validating Data for Specific Endpoints
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<List<UserDTO>>> GetAllUsers()
@@ -36,6 +39,8 @@ namespace BPDTSWebAPI.Controllers
 
     
         [HttpGet("{userId:int}", Name = "GetUserById")]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)] 
+        [HttpCacheValidation(MustRevalidate = false)] 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -54,6 +59,8 @@ namespace BPDTSWebAPI.Controllers
         //[HttpGet("GetUserByCity/{city:string}")]
         //[HttpGet("{city:string}", Name = "GetUserByCity")]
         [HttpGet]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)] 
+        [HttpCacheValidation(MustRevalidate = false)] 
         [Route("GetUserByCity/{city}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
