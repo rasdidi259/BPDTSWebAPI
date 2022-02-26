@@ -1,5 +1,6 @@
 using BPDTSWebAPI.Configurations;
 using BPDTSWebAPI.Repository;
+using BPDTSWebAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -55,6 +56,8 @@ namespace BPDTSWebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BPDTSWebAPI v1"));
             }
+
+            app.ConfigureExceptionHandler(); // Errors Handling Globally
 
             app.UseHttpsRedirection();
 

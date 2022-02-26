@@ -163,12 +163,8 @@ namespace BPDTSWebAPI.Tests.Controllers
 
             Assert.NotNull(actualUserResult);
             Assert.Equal(count, actualUserResult.Count);
-            //Assert.Equal(userDTOs.FirstName, actualUserResult.FirstName);
-            //Assert.Equal(userDTOs.LastName, actualUserResult.LastName);
-            //Assert.Equal(userDTO.City, actualUserResult.City);
-            //Assert.Equal(userDTO.Id, actualUserResult.Id);
+            Assert.Equal(userDTOs.Count, actualUserResult.Count);
+            Assert.Equal(userDTOs, actualUserResult);
         }
-
-
     }
 }
