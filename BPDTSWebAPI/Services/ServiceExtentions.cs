@@ -1,7 +1,9 @@
-﻿using BPDTSWebAPI.Models;
+﻿using AspNetCoreRateLimit;
+using BPDTSWebAPI.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -38,6 +40,32 @@ namespace BPDTSWebAPI.Services
                     }
                 });
             });
+        }
+
+        /// <summary>
+        /// For Limiting the Rate of Access of the Web API
+        /// </summary>
+        /// <param name="services"></param>
+        public static void ConfigureRateLimiting(this IServiceCollection services)
+        {
+            var rateLimitRules = new List<RateLimitRule>
+            {
+                new RateLimitRule
+                {
+                    Endpoint="*",
+                    Limit= 5,
+                    Period="10m"
+                }
+            };
+
+            services.Configure<IpRateLimitOptions>(opt =>
+            {
+                opt.GeneralRules = rateLimitRules;
+            });
+
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
         }
 
     }

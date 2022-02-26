@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using BPDTSWebAPI.Configurations;
 using BPDTSWebAPI.Repository;
 using BPDTSWebAPI.Services;
@@ -32,6 +33,25 @@ namespace BPDTSWebAPI
 
             services.AddControllers();
 
+
+            // Keep track of who requested what and how many times
+            services.AddMemoryCache();
+
+            services.ConfigureRateLimiting();
+
+            services.AddHttpContextAccessor();
+
+
+            // Added CORS Policy
+            services.AddCors(o =>
+            {
+                o.AddPolicy("CorsPolicyAllowAll", builder =>
+                builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                );
+            });
+
             // Added AutoMapper(MapperInitializer)
             services.AddAutoMapper(typeof(MapperInitializer));
 
@@ -60,6 +80,11 @@ namespace BPDTSWebAPI
             app.ConfigureExceptionHandler(); // Errors Handling Globally
 
             app.UseHttpsRedirection();
+
+            app.UseCors("CorsPolicyAllowAll"); // Added CORS policy CorsPolicyAllowAll
+
+
+            app.UseIpRateLimiting();
 
             app.UseRouting();
 
