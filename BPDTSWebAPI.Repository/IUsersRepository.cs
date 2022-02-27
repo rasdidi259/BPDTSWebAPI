@@ -13,5 +13,6 @@ namespace BPDTSWebAPI.Repository
         Task<User> GetUserByIdAsync(int userId);
 
         Task<List<UserByCity>> GetUserByCityAsync(string city);
+        Task<List<UserByCity>> GetUserByCordinatesAsync(); // (double latitude, double longitude);
     }
 }

@@ -39,8 +39,7 @@ namespace BPDTSWebAPI.Controllers
             var userDTOs = _mapper.Map<List<UserDTO>>(users);
             return Ok(userDTOs);
         }
-
-    
+            
         [HttpGet("{userId:int}", Name = "GetUserById")]
         [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)] 
         [HttpCacheValidation(MustRevalidate = false)] 
@@ -60,7 +59,6 @@ namespace BPDTSWebAPI.Controllers
             return Ok(userDTO);
         }
 
-
         [HttpGet]
         [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)] 
         [HttpCacheValidation(MustRevalidate = false)] 
@@ -74,6 +72,22 @@ namespace BPDTSWebAPI.Controllers
             if (users == null)  return NotFound();            
             var userDTOs = _mapper.Map<List<UserByCityDTO>>(users);
             return Ok(userDTOs);
+        }
+
+        [HttpGet]
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)]
+        [HttpCacheValidation(MustRevalidate = false)]
+        [Route("GetUserByCordinates")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<List<UserByCityDTO>>> GetUserByCordinates()
+        {
+            var userByCity = await _usersRepository.GetUserByCordinatesAsync(); 
+            if (userByCity == null) return NotFound();          
+            var userByCityDTOs = _mapper.Map<List<UserByCityDTO>>(userByCity);
+
+            return Ok(userByCityDTOs);
         }
     }
 }

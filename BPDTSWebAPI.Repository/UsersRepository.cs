@@ -1,4 +1,5 @@
-﻿using BPDTSWebAPI.Entities;
+﻿using BPDTSWebAPI.BLL;
+using BPDTSWebAPI.Entities;
 using BPDTSWebAPI.Utils;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -63,6 +64,20 @@ namespace BPDTSWebAPI.Repository
             {
                 User user = await response.Content.ReadAsAsync<User>();
                 return user;
+            }
+            else
+            {
+                throw new Exception(response.ReasonPhrase);
+            }
+        }
+
+        public async Task<List<UserByCity>> GetUserByCordinatesAsync()
+        {
+            using HttpResponseMessage response = await RestApiService.RestApiClient.GetAsync($"{GetBaseUrl()}users");
+            if (response.IsSuccessStatusCode)
+            {
+                List<UserByCity> userByCity = await response.Content.ReadAsAsync<List<UserByCity>>();
+                return RadiusCalculation.GetUserByCordinates(userByCity);
             }
             else
             {
