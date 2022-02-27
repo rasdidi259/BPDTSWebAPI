@@ -5,6 +5,7 @@ using BPDTSWebAPI.Entities;
 using BPDTSWebAPI.Models;
 using BPDTSWebAPI.Repository;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,8 @@ namespace BPDTSWebAPI.Tests.Controllers
         /// </summary>
         private readonly Mock<IUsersRepository> _userRepoMock = new();
         private readonly Mock<IMapper> _mapperMock = new();
+        private readonly Mock<ILogger<UserController>> _loggerMock = new();
+
 
         [Fact]
         public async Task GetAllUsers_Nocondition_ReturnsAll()
@@ -38,7 +41,7 @@ namespace BPDTSWebAPI.Tests.Controllers
 
             _mapperMock.Setup(m=>m.Map<List<UserDTO>>(listOfUsers)).Returns(userDTOs);
 
-            var controller = new UserController(_userRepoMock.Object, _mapperMock.Object);
+            var controller = new UserController(_userRepoMock.Object, _mapperMock.Object, _loggerMock.Object);
 
             // Act
             var actionResult = await controller.GetAllUsers();
@@ -53,7 +56,7 @@ namespace BPDTSWebAPI.Tests.Controllers
         public async Task GetAllUsers_WithoutCondition_ReturnsAllUsers()
         {
             // Arrange 
-            var controller = new UserController(_userRepoMock.Object, _mapperMock.Object);
+            var controller = new UserController(_userRepoMock.Object, _mapperMock.Object, _loggerMock.Object);
 
             // Act
             await controller.GetAllUsers();
@@ -86,7 +89,7 @@ namespace BPDTSWebAPI.Tests.Controllers
             _mapperMock.Setup(m => m.Map<UserDTO>(user)).Returns(userDTO);
 
 
-            var controller = new UserController(_userRepoMock.Object, _mapperMock.Object);
+            var controller = new UserController(_userRepoMock.Object, _mapperMock.Object, _loggerMock.Object);
 
             // Act
             var actionResult = await controller.GetUserById(userId);
@@ -113,7 +116,7 @@ namespace BPDTSWebAPI.Tests.Controllers
             var userId = 90202;
             _userRepoMock.Setup(x => x.GetUserByIdAsync(userId)).Returns(Task.FromResult((User)null));
 
-            var controller = new UserController(_userRepoMock.Object, _mapperMock.Object);
+            var controller = new UserController(_userRepoMock.Object, _mapperMock.Object, _loggerMock.Object);
 
             // Act
             var result = await controller.GetUserById(2);
@@ -126,6 +129,7 @@ namespace BPDTSWebAPI.Tests.Controllers
         public async Task GetUserByCity_GivenCityName_ReturnsUser()
         {
             // Arrange 
+            var errorMethod = "GetUserByCity";
             var city = "Kax";
             var count = 1;
             var users = new List<UserByCity>()
@@ -150,8 +154,8 @@ namespace BPDTSWebAPI.Tests.Controllers
 
             _userRepoMock.Setup(u => u.GetUserByCityAsync(city)).Returns(Task.FromResult((List<UserByCity>)users));
             _mapperMock.Setup(m => m.Map<List<UserByCityDTO>>(users)).Returns(userDTOs);
-
-            var controller = new UserController(_userRepoMock.Object, _mapperMock.Object);
+            
+            var controller = new UserController(_userRepoMock.Object, _mapperMock.Object, _loggerMock.Object);
 
             // Act
             var actionResult = await controller.GetUserByCity(city);

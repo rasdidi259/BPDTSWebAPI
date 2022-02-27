@@ -5,6 +5,7 @@ using BPDTSWebAPI.Repository;
 using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,11 +19,13 @@ namespace BPDTSWebAPI.Controllers
     {
         private readonly IUsersRepository _usersRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IUsersRepository usersRepository, IMapper mapper)
+        public UserController(IUsersRepository usersRepository, IMapper mapper, ILogger<UserController> logger)
         {
             _usersRepository = usersRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet(Name = "GetAllUsers")]
@@ -47,7 +50,12 @@ namespace BPDTSWebAPI.Controllers
         public async Task<ActionResult<UserDTO>> GetUserById(int userId)
         {
             var user = await _usersRepository.GetUserByIdAsync(userId);            
-            if (user == null) return NotFound();            
+            if (user == null) 
+            {
+                _logger.LogError($"Invalid GET attempt in {nameof(GetUserById)}");
+                return NotFound(); 
+            }
+                           
             var userDTO = _mapper.Map<UserDTO>(user);
             return Ok(userDTO);
         }
